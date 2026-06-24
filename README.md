@@ -1,2 +1,140 @@
-# -brain-ct-hemorrhage-classification-segmentation
-Machine learning pipeline for brain CT hemorrhage classification and pixel-level segmentation, using CNNs, Grad-CAM++, and U-Net.
+# Brain CT Hemorrhage Classification and Segmentation
+
+A machine learning pipeline for the automated detection, classification, and pixel-level segmentation of cerebral hemorrhages from brain CT scans. This project explores a progression of modeling approaches — from baseline logistic regression to convolutional neural networks (CNNs) — and incorporates model interpretability via Grad-CAM++ and pixel-level localization via U-Net segmentation.
+
+---
+
+## Motivation
+
+Cerebral hemorrhage is a life-threatening condition that requires rapid and accurate diagnosis. Even for experienced radiologists, the high levels of noise and visual similarity between hemorrhage types in CT scans make this a difficult task. This project investigates whether machine learning techniques can assist in automating hemorrhage detection and classification, with the goal of improving diagnostic speed and consistency.
+
+---
+
+## Dataset
+
+The dataset consists of brain CT scans organized by hemorrhage type, stored in DICOM format. Images were sourced from the `brain_window` rendering subfolder for each class. The following hemorrhage types are represented:
+
+- Epidural
+- Intraparenchymal
+- Intraventricular
+- Subarachnoid
+- Subdural
+- Normal (no hemorrhage)
+- Multi (multiple hemorrhage types)
+
+Due to computational constraints, a stratified random sample of 500 images was used for baseline models, while the full dataset was used for CNN training.
+
+> **Note:** The dataset is not included in this repository. To run the notebooks, download the dataset and update the `data_dir` variable in the first cell of each notebook to point to your local copy.
+
+---
+
+## Project Structure
+
+```
+brain-ct-hemorrhage-classification-segmentation/
+│
+├── models/
+│   ├── logistic_regression/
+│   │   └── baseline_models.ipynb       # Binary, multiclass softmax, and multilabel sigmoid logistic regression
+│   ├── cnn/
+│   │   ├── cnn_models.ipynb            # Sigmoid CNN, SoftMax CNN, AI-assisted CNN, and final trained model
+│   │   ├── CNNmodel1.keras             # Initial SoftMax CNN (15 epochs)
+│   │   ├── CNNImprovedModel.keras      # Continued training checkpoint (15 epochs)
+│   │   └── CNNImprovedModel_best.keras # Best weights from final training run (20 epochs total)
+│   ├── unet/                           # U-Net pixel-level segmentation
+│   └── explainability/
+│       └── gradcam/                    # Grad-CAM++ visualization
+│
+├── data/                               # Data documentation (dataset not included)
+├── notebooks/                          # Additional exploratory notebooks
+├── results/                            # Figures, plots, and evaluation outputs
+└── README.md
+```
+
+---
+
+## Modeling Approaches
+
+### Baseline Models (`models/logistic_regression/`)
+Three logistic regression variants were implemented as baselines:
+
+- **Binary logistic regression** — hemorrhage vs. normal; achieved ~93–95% test accuracy but cannot distinguish hemorrhage subtypes
+- **Multiclass SoftMax logistic regression** — predicts a single hemorrhage type per image; achieved ~31% test accuracy due to loss of spatial information when images are flattened
+- **Multilabel sigmoid logistic regression** — one-vs-rest approach allowing multiple class predictions; achieved ~14% test accuracy, reflecting a mismatch between the model formulation and the dataset's mutually exclusive label structure
+
+### CNN Models (`models/cnn/`)
+Four CNN variants were implemented and compared:
+
+- **Sigmoid CNN** — multi-label output; showed clear overfitting (~75% training accuracy, ~25–30% validation accuracy)
+- **SoftMax CNN (baseline)** — more appropriate for mutually exclusive classes; achieved ~57% training and validation accuracy
+- **AI-assisted CNN** — incorporated class weighting, data augmentation, batch normalization, and global average pooling; ultimately underperformed with ~42% peak validation accuracy
+- **Final SoftMax CNN** — continued training of the original SoftMax CNN with early stopping and ReduceLROnPlateau; achieved the best overall performance at ~59% validation accuracy after 20 epochs
+
+### Grad-CAM++ (`models/explainability/gradcam/`)
+Gradient-weighted Class Activation Mapping (Grad-CAM++) was applied to the sigmoid CNN to visualize which image regions influenced model predictions. Results highlighted that high accuracy alone does not guarantee that a model is attending to clinically meaningful regions.
+
+### U-Net Segmentation (`models/unet/`)
+A U-Net architecture was trained for pixel-level segmentation, classifying each pixel into one of four anatomical categories: background, brain tissue, skull, and hemorrhage region. The model achieved a training accuracy of ~80% and a Mean IoU of ~0.43, with no observed overfitting.
+
+---
+
+## Key Results
+
+| Model | Test Accuracy |
+|---|---|
+| Binary Logistic Regression | ~93–95% |
+| Multiclass SoftMax Logistic Regression | ~31% |
+| Multilabel Sigmoid Logistic Regression | ~14% |
+| Sigmoid CNN | ~25–30% (val) |
+| SoftMax CNN (final, 20 epochs) | ~59% (val) |
+| U-Net (pixel-level) | ~80% accuracy, ~0.43 Mean IoU |
+
+---
+
+## Requirements
+
+```
+numpy
+matplotlib
+Pillow
+scikit-learn
+tensorflow
+keras
+seaborn
+```
+
+Install dependencies with:
+```bash
+pip install numpy matplotlib Pillow scikit-learn tensorflow keras seaborn
+```
+
+---
+
+## How to Run
+
+1. Clone the repository
+2. Download the dataset and update `data_dir` in the first cell of each notebook
+3. Run notebooks in order: `baseline_models.ipynb` → `cnn_models.ipynb`
+4. Pre-trained model weights (`.keras` files) can be loaded directly to skip retraining
+
+---
+
+## Authors
+
+This project was completed as the final project for MATH 7243: Machine Learning I at Northeastern University (Spring 2026).
+
+- Dylan Chern
+- Nikki Budri
+- Jiacong Ye
+- Xiaozhe Zhang
+
+Course Instructor: Prof. He Wang
+
+---
+
+## References
+
+- Ahmed, S. N., & Prakasam, P. (2025). Intracranial hemorrhage segmentation and classification framework in computer tomography images using deep learning techniques. *Scientific Reports*, 15(1), 17151.
+- Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional networks for biomedical image segmentation. *arXiv:1505.04597*.
+- Yamauchi, T. (2024). Spatial sensitive Grad-CAM++. *CVPR Workshops*, pp. 8164–8168.
+- Google. Image segmentation. TensorFlow. https://www.tensorflow.org/tutorials/images/segmentation
