@@ -128,7 +128,7 @@ This project was completed as the final project for MATH 7243: Machine Learning 
 | Contributor | Primary Contributions |
 |---|---|
 | Dylan Chern | CNN models, baseline logistic regression models, preprocessing |
-| Nikki Budri | Preprocessing, Grad-CAM++ |
+| Nikki Budri | Preprocessing |
 | Jiacong Ye | Grad-CAM++ |
 | Xiaozhe Zhang | U-Net preprocessing and segmentation |
 
