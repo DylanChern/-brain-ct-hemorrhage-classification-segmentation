@@ -2,6 +2,8 @@
 
 A machine learning pipeline for the automated detection, classification, and pixel-level segmentation of cerebral hemorrhages from brain CT scans. This project explores a progression of modeling approaches — from baseline logistic regression to convolutional neural networks (CNNs) — and incorporates model interpretability via Grad-CAM++ and pixel-level localization via U-Net segmentation.
 
+📄 [View Final Report](https://www.dropbox.com/scl/fi/nk1s7sfad851srp6ey1vs/MATH_7243_Final_Project-4.pdf?rlkey=cbon4qgjk5rjttifx0dm3x5h6&st=4gkwfeft&dl=0)
+
 ---
 
 ## Motivation
