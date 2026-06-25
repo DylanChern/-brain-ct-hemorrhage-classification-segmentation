@@ -73,6 +73,8 @@ Four CNN variants were implemented and compared:
 ### Grad-CAM++ (`models/explainability/gradcam/`)
 Gradient-weighted Class Activation Mapping (Grad-CAM++) was applied to the sigmoid CNN to visualize which image regions influenced model predictions. Results highlighted that high accuracy alone does not guarantee that a model is attending to clinically meaningful regions.
 
+> **Note:** Grad-CAM++ code will be added to this repository shortly.
+
 ### U-Net Segmentation (`models/unet/`)
 A U-Net architecture was trained for pixel-level segmentation, classifying each pixel into one of four anatomical categories: background, brain tissue, skull, and hemorrhage region. The model achieved a training accuracy of ~80% and a Mean IoU of ~0.43, with no observed overfitting.
 
@@ -123,10 +125,12 @@ pip install numpy matplotlib Pillow scikit-learn tensorflow keras seaborn
 
 This project was completed as the final project for MATH 7243: Machine Learning I at Northeastern University (Spring 2026).
 
-- Dylan Chern
-- Nikki Budri
-- Jiacong Ye
-- Xiaozhe Zhang
+| Contributor | Primary Contributions |
+|---|---|
+| Dylan Chern | CNN models, baseline logistic regression models, preprocessing |
+| Nikki Budri | Preprocessing, Grad-CAM++ |
+| Jiacong Ye | Grad-CAM++ |
+| Xiaozhe Zhang | U-Net preprocessing and segmentation |
 
 Course Instructor: Prof. He Wang
 
