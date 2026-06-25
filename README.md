@@ -41,13 +41,12 @@ brain-ct-hemorrhage-classification-segmentation/
 │   │   ├── CNNmodel1.keras             # Initial SoftMax CNN (15 epochs)
 │   │   ├── CNNImprovedModel.keras      # Continued training checkpoint (15 epochs)
 │   │   └── CNNImprovedModel_best.keras # Best weights from final training run (20 epochs total)
-│   ├── unet/                           # U-Net pixel-level segmentation
-│   └── explainability/
-│       └── gradcam/                    # Grad-CAM++ visualization
+│   └── unet/
+│       ├── data_mask_for_unet.ipynb    # Preprocessing pipeline: generates binary and quad-level segmentation masks
+│       └── unet.ipynb                  # U-Net model architecture, training, and evaluation
 │
-├── data/                               # Data documentation (dataset not included)
-├── notebooks/                          # Additional exploratory notebooks
-├── results/                            # Figures, plots, and evaluation outputs
+├── reports/
+│   └── final_report.pdf                # Full project report
 └── README.md
 ```
 
@@ -70,7 +69,7 @@ Four CNN variants were implemented and compared:
 - **AI-assisted CNN** — incorporated class weighting, data augmentation, batch normalization, and global average pooling; ultimately underperformed with ~42% peak validation accuracy
 - **Final SoftMax CNN** — continued training of the original SoftMax CNN with early stopping and ReduceLROnPlateau; achieved the best overall performance at ~59% validation accuracy after 20 epochs
 
-### Grad-CAM++ (`models/explainability/gradcam/`)
+### Grad-CAM++
 Gradient-weighted Class Activation Mapping (Grad-CAM++) was applied to the sigmoid CNN to visualize which image regions influenced model predictions. Results highlighted that high accuracy alone does not guarantee that a model is attending to clinically meaningful regions.
 
 > **Note:** Grad-CAM++ code will be added to this repository shortly.
@@ -115,9 +114,10 @@ pip install numpy matplotlib Pillow scikit-learn tensorflow keras seaborn
 ## How to Run
 
 1. Clone the repository
-2. Download the dataset and update `data_dir` in the first cell of each notebook
-3. Run notebooks in order: `baseline_models.ipynb` → `cnn_models.ipynb`
-4. Pre-trained model weights (`.keras` files) can be loaded directly to skip retraining
+2. Download the dataset and update `data_dir` in the first cell of each notebook to point to your local copy
+3. For classification: run `models/logistic_regression/baseline_models.ipynb` then `models/cnn/cnn_models.ipynb`
+4. For segmentation: run `models/unet/data_mask_for_unet.ipynb` first to generate masks, then `models/unet/unet.ipynb`
+5. Pre-trained model weights (`.keras` files) can be loaded directly to skip retraining
 
 ---
 
